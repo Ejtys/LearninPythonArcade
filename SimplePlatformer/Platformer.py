@@ -10,8 +10,12 @@ class MyGame(arcade.Window):
         
         #Init scene var
         self.scene = None
+        
         #Init var for player sprite
         self.player = None
+        
+        #Init physics engine
+        self.engine = None
         
 
     def setup(self):
@@ -41,6 +45,33 @@ class MyGame(arcade.Window):
             box = arcade.Sprite(cons.BOX_IMAGE, cons.TILE_SCALING)
             box.position = coordinate
             self.scene.add_sprite("Walls", box)
+            
+        self.engine = arcade.PhysicsEngineSimple(self.player, self.scene.get_sprite_list("Walls"))
+    
+    def on_key_press(self, symbol: int, modifiers: int):
+        if symbol in (arcade.key.UP, arcade.key.W):
+            self.player.change_y = cons.PLAYER_MOVEMENT_SPEED
+        elif symbol in (arcade.key.DOWN, arcade.key.S):
+            self.player.change_y = -cons.PLAYER_MOVEMENT_SPEED
+        if symbol in (arcade.key.RIGHT, arcade.key.D):
+            self.player.change_x = cons.PLAYER_MOVEMENT_SPEED
+        elif symbol in (arcade.key.LEFT, arcade.key.A):
+            self.player.change_x = -cons.PLAYER_MOVEMENT_SPEED
+        
+            
+            
+    def on_key_release(self, symbol: int, modifiers: int):
+        if symbol in (arcade.key.UP, arcade.key.W):
+            self.player.change_y = 0
+        elif symbol in (arcade.key.DOWN, arcade.key.S):
+            self.player.change_y = 0
+        if symbol in (arcade.key.RIGHT, arcade.key.D):
+            self.player.change_x = 0
+        elif symbol in (arcade.key.LEFT, arcade.key.A):
+            self.player.change_x = 0
+    
+    def on_update(self, delta_time: float):
+        self.engine.update()
     
     def on_draw(self):
         
