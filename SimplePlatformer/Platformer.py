@@ -15,14 +15,20 @@ class MyGame(arcade.Window):
         #Init var for player sprite
         self.player = None
         
-        #Init physics engine
+        #Init physics engine var
         self.engine = None
+        
+        #Init camera var
+        self.camera = None
         
         #Track pressed keys
         self.pressed_keys = set()
         
 
     def setup(self):
+        #Init camera
+        self.camera = arcade.Camera(cons.SCREEN_WIDTH, cons.SCREEN_HEIGHT)
+        
         #Init scene
         self.scene = arcade.Scene()
         
@@ -70,11 +76,23 @@ class MyGame(arcade.Window):
         elif self.pressed_keys & right and not (self.pressed_keys & left):
             self.player.change_x = cons.PLAYER_MOVEMENT_SPEED
         
+    def center_camera_to_player(self):
+        screen_center_x = self.player.center_x - (self.camera.viewport_width / 2)
+        screen_center_y = self.player.center_y - (
+            self.camera.viewport_height / 2
+        )
+
+        # Don't let camera travel past 0
+        if screen_center_x < 0:
+            screen_center_x = 0
+        if screen_center_y < 0:
+            screen_center_y = 0
+        player_centered = screen_center_x, screen_center_y
+
+        self.camera.move_to(player_centered, speed=0.05)
     
     def on_key_press(self, symbol: int, modifiers: int):
         self.pressed_keys.add(symbol)
-        
-            
             
     def on_key_release(self, symbol: int, modifiers: int):
         self.pressed_keys.remove(symbol)
@@ -82,10 +100,13 @@ class MyGame(arcade.Window):
     def on_update(self, delta_time: float):
         self.update_player_movement()
         self.engine.update()
+        self.center_camera_to_player()
     
     def on_draw(self):
         
         self.clear()
+        
+        self.camera.use()
         
         self.scene.draw()
 
