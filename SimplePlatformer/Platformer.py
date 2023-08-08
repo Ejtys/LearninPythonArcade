@@ -14,6 +14,7 @@ class MyGame(arcade.Window):
         self.player = None
         self.engine = None
         self.camera = None
+        self.gui_camera = None
         
         #Init sounds
         self.collect_coin_sound = arcade.load_sound(cons.COLLECT_COIN_SOUND)
@@ -22,10 +23,13 @@ class MyGame(arcade.Window):
         #Track pressed keys
         self.pressed_keys = set()
         
+        self.score = 0
+        
 
     def setup(self):
-        #Init camera
+        #Init cameras
         self.camera = arcade.Camera(cons.SCREEN_WIDTH, cons.SCREEN_HEIGHT)
+        self.gui_camera = arcade.Camera(cons.SCREEN_WIDTH, cons.SCREEN_HEIGHT)
         
         #Init scene
         self.scene = arcade.Scene()
@@ -63,6 +67,9 @@ class MyGame(arcade.Window):
         self.engine = arcade.PhysicsEnginePlatformer(
                         self.player, gravity_constant=cons.GRAVITY, 
                         walls = self.scene["Walls"])
+        
+        
+        self.score = 0
     
     def update_player_movement(self):
         up = {arcade.key.UP, arcade.key.W}
@@ -109,6 +116,7 @@ class MyGame(arcade.Window):
         for coin in coin_hit_list:
             coin.remove_from_sprite_lists()
             arcade.play_sound(self.collect_coin_sound)
+            self.score += 1
     
     def on_draw(self):       
         self.clear()
@@ -116,6 +124,17 @@ class MyGame(arcade.Window):
         self.camera.use()
         
         self.scene.draw()
+        
+        self.gui_camera.use()
+        
+        score_text = f"Score: {self.score}"
+        arcade.draw_text(
+            score_text,
+            10,
+            10,
+            arcade.csscolor.WHITE,
+            18,
+        )
 
 
 
