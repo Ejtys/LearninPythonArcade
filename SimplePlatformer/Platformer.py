@@ -9,17 +9,15 @@ class MyGame(arcade.Window):
         
         arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
         
-        #Init scene var
+        #Init vars
         self.scene = None
-        
-        #Init var for player sprite
         self.player = None
-        
-        #Init physics engine var
         self.engine = None
-        
-        #Init camera var
         self.camera = None
+        
+        #Init sounds
+        self.collect_coin_sound = arcade.load_sound(cons.COLLECT_COIN_SOUND)
+        self.jump_sound = arcade.load_sound(cons.JUMP_SOUND)
         
         #Track pressed keys
         self.pressed_keys = set()
@@ -56,6 +54,12 @@ class MyGame(arcade.Window):
             box.position = coordinate
             self.scene.add_sprite("Walls", box)
             
+        for x in range(128, 1250, 256):
+            coin = arcade.Sprite(":resources:images/items/coinGold.png", cons.COIN_SCALING)
+            coin.center_x = x
+            coin.center_y = 96
+            self.scene.add_sprite("Coins", coin)
+            
         self.engine = arcade.PhysicsEnginePlatformer(
                         self.player, gravity_constant=cons.GRAVITY, 
                         walls = self.scene["Walls"])
@@ -70,6 +74,7 @@ class MyGame(arcade.Window):
         
         if self.pressed_keys & up and self.engine.can_jump():
             self.player.change_y = cons.PLAYER_JUMP_SPEED
+            arcade.play_sound(self.jump_sound)
             
         if self.pressed_keys & left and not (self.pressed_keys & right):
             self.player.change_x = -cons.PLAYER_MOVEMENT_SPEED
@@ -78,9 +83,7 @@ class MyGame(arcade.Window):
         
     def center_camera_to_player(self):
         screen_center_x = self.player.center_x - (self.camera.viewport_width / 2)
-        screen_center_y = self.player.center_y - (
-            self.camera.viewport_height / 2
-        )
+        screen_center_y = self.player.center_y - (self.camera.viewport_height / 2)
 
         # Don't let camera travel past 0
         if screen_center_x < 0:
@@ -101,9 +104,13 @@ class MyGame(arcade.Window):
         self.update_player_movement()
         self.engine.update()
         self.center_camera_to_player()
-    
-    def on_draw(self):
         
+        coin_hit_list = arcade.check_for_collision_with_list(self.player, self.scene["Coins"])
+        for coin in coin_hit_list:
+            coin.remove_from_sprite_lists()
+            arcade.play_sound(self.collect_coin_sound)
+    
+    def on_draw(self):       
         self.clear()
         
         self.camera.use()
