@@ -50,7 +50,9 @@ class MyGame(arcade.Window):
             box.position = coordinate
             self.scene.add_sprite("Walls", box)
             
-        self.engine = arcade.PhysicsEngineSimple(self.player, self.scene.get_sprite_list("Walls"))
+        self.engine = arcade.PhysicsEnginePlatformer(
+                        self.player, gravity_constant=cons.GRAVITY, 
+                        walls = self.scene["Walls"])
     
     def update_player_movement(self):
         up = {arcade.key.UP, arcade.key.W}
@@ -59,12 +61,10 @@ class MyGame(arcade.Window):
         right = {arcade.key.RIGHT, arcade.key.D}
         
         self.player.change_x = 0
-        self.player.change_y = 0
         
-        if self.pressed_keys & up and not (self.pressed_keys & down):
-            self.player.change_y = cons.PLAYER_MOVEMENT_SPEED
-        elif self.pressed_keys & down and not (self.pressed_keys & up):
-            self.player.change_y = -cons.PLAYER_MOVEMENT_SPEED
+        if self.pressed_keys & up and self.engine.can_jump():
+            self.player.change_y = cons.PLAYER_JUMP_SPEED
+            
         if self.pressed_keys & left and not (self.pressed_keys & right):
             self.player.change_x = -cons.PLAYER_MOVEMENT_SPEED
         elif self.pressed_keys & right and not (self.pressed_keys & left):
@@ -73,15 +73,14 @@ class MyGame(arcade.Window):
     
     def on_key_press(self, symbol: int, modifiers: int):
         self.pressed_keys.add(symbol)
-        self.update_player_movement()
         
             
             
     def on_key_release(self, symbol: int, modifiers: int):
         self.pressed_keys.remove(symbol)
-        self.update_player_movement()
     
     def on_update(self, delta_time: float):
+        self.update_player_movement()
         self.engine.update()
     
     def on_draw(self):
