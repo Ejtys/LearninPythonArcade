@@ -10,6 +10,7 @@ class MyGame(arcade.Window):
         arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
         
         #Init vars
+        self.tile_map = None
         self.scene = None
         self.player = None
         self.engine = None
@@ -32,41 +33,25 @@ class MyGame(arcade.Window):
         self.gui_camera = arcade.Camera(cons.SCREEN_WIDTH, cons.SCREEN_HEIGHT)
         
         #Init scene
-        self.scene = arcade.Scene()
+        self.tile_map = arcade.load_tilemap(cons.TILE_MAP, cons.TILE_SCALING, cons.LAYER_OPTIONS)
         
-        #Init sprites lists
-        self.scene.add_sprite_list("Player")
-        self.scene.add_sprite_list("Walls", use_spatial_hash=True)
+        self.scene = arcade.Scene.from_tilemap(self.tile_map)
+        
+        if self.tile_map.background_color:
+            arcade.set_background_color(self.tile_map.background_color)
         
         #Init player
+        self.scene.add_sprite_list("Player")
         self.player = arcade.Sprite(cons.PLAYER_IMAGE, cons.CHARACTER_SCALING)
         self.player.center_x = 64
         self.player.center_y = 128
         self.scene.add_sprite("Playe", self.player)
         
-        #Init walls
-        for x in range(0, 1250, 64):
-            wall = arcade.Sprite(cons.WALL_IMAGE, cons.TILE_SCALING)
-            wall.center_x = x
-            wall.center_y = 32
-            self.scene.add_sprite("Walls", wall)
-            
-        coordinate_list = [[512, 96], [256, 96], [768, 96]]
-
-        for coordinate in coordinate_list:
-            box = arcade.Sprite(cons.BOX_IMAGE, cons.TILE_SCALING)
-            box.position = coordinate
-            self.scene.add_sprite("Walls", box)
-            
-        for x in range(128, 1250, 256):
-            coin = arcade.Sprite(":resources:images/items/coinGold.png", cons.COIN_SCALING)
-            coin.center_x = x
-            coin.center_y = 96
-            self.scene.add_sprite("Coins", coin)
-            
-        self.engine = arcade.PhysicsEnginePlatformer(
-                        self.player, gravity_constant=cons.GRAVITY, 
-                        walls = self.scene["Walls"])
+        #Init engine
+        
+        self.engine = arcade.PhysicsEnginePlatformer(self.player, 
+                                                     gravity_constant=cons.GRAVITY, 
+                                                     walls = self.scene["Platforms"])
         
         
         self.score = 0

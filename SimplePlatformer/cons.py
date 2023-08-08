@@ -16,3 +16,11 @@ BOX_IMAGE = ":resources:images/tiles/boxCrate.png"
 
 COLLECT_COIN_SOUND = ":resources:sounds/coin1.wav"
 JUMP_SOUND = ":resources:sounds/jump3.wav"
+
+TILE_MAP = "SimplePlatformer/map/map.json"
+
+LAYER_OPTIONS = {
+            "Platforms": {
+                "use_spatial_hash": True,
+            },
+        }
