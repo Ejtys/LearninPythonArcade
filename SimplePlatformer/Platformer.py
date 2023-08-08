@@ -1,5 +1,6 @@
 import arcade
 import cons
+import sys
 
 
 class MyGame(arcade.Window):
@@ -16,6 +17,9 @@ class MyGame(arcade.Window):
         
         #Init physics engine
         self.engine = None
+        
+        #Track pressed keys
+        self.pressed_keys = set()
         
 
     def setup(self):
@@ -48,27 +52,34 @@ class MyGame(arcade.Window):
             
         self.engine = arcade.PhysicsEngineSimple(self.player, self.scene.get_sprite_list("Walls"))
     
-    def on_key_press(self, symbol: int, modifiers: int):
-        if symbol in (arcade.key.UP, arcade.key.W):
+    def update_player_movement(self):
+        up = {arcade.key.UP, arcade.key.W}
+        down = {arcade.key.DOWN, arcade.key.S}
+        left = {arcade.key.LEFT, arcade.key.A}
+        right = {arcade.key.RIGHT, arcade.key.D}
+        
+        self.player.change_x = 0
+        self.player.change_y = 0
+        
+        if self.pressed_keys & up and not (self.pressed_keys & down):
             self.player.change_y = cons.PLAYER_MOVEMENT_SPEED
-        elif symbol in (arcade.key.DOWN, arcade.key.S):
+        elif self.pressed_keys & down and not (self.pressed_keys & up):
             self.player.change_y = -cons.PLAYER_MOVEMENT_SPEED
-        if symbol in (arcade.key.RIGHT, arcade.key.D):
-            self.player.change_x = cons.PLAYER_MOVEMENT_SPEED
-        elif symbol in (arcade.key.LEFT, arcade.key.A):
+        if self.pressed_keys & left and not (self.pressed_keys & right):
             self.player.change_x = -cons.PLAYER_MOVEMENT_SPEED
+        elif self.pressed_keys & right and not (self.pressed_keys & left):
+            self.player.change_x = cons.PLAYER_MOVEMENT_SPEED
+        
+    
+    def on_key_press(self, symbol: int, modifiers: int):
+        self.pressed_keys.add(symbol)
+        self.update_player_movement()
         
             
             
     def on_key_release(self, symbol: int, modifiers: int):
-        if symbol in (arcade.key.UP, arcade.key.W):
-            self.player.change_y = 0
-        elif symbol in (arcade.key.DOWN, arcade.key.S):
-            self.player.change_y = 0
-        if symbol in (arcade.key.RIGHT, arcade.key.D):
-            self.player.change_x = 0
-        elif symbol in (arcade.key.LEFT, arcade.key.A):
-            self.player.change_x = 0
+        self.pressed_keys.remove(symbol)
+        self.update_player_movement()
     
     def on_update(self, delta_time: float):
         self.engine.update()
@@ -78,7 +89,6 @@ class MyGame(arcade.Window):
         self.clear()
         
         self.scene.draw()
-
 
 
 
