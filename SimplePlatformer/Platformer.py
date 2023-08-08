@@ -26,12 +26,27 @@ class MyGame(arcade.Window):
         self.player.center_x = 64
         self.player.center_y = 128
         self.player_list.append(self.player)
+        
+        #Init walls
+        for x in range(0, 1250, 64):
+            wall = arcade.Sprite(cons.WALL_IMAGE, cons.TILE_SCALING)
+            wall.center_x = x
+            wall.center_y = 32
+            self.wall_list.append(wall)
+            
+        coordinate_list = [[512, 96], [256, 96], [768, 96]]
+
+        for coordinate in coordinate_list:
+            box = arcade.Sprite(cons.BOX_IMAGE, cons.TILE_SCALING)
+            box.position = coordinate
+            self.wall_list.append(box)
     
     def on_draw(self):
         
         self.clear()
         
         self.player_list.draw()
+        self.wall_list.draw()
 
 
 

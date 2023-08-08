@@ -7,3 +7,5 @@ TILE_SCALING = 0.5
 
 
 PLAYER_IMAGE = ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png"
+WALL_IMAGE = ":resources:images/tiles/grassMid.png"
+BOX_IMAGE = ":resources:images/tiles/boxCrate.png"
