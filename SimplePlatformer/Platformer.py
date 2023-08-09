@@ -1,6 +1,5 @@
 import arcade
 import cons
-import sys
 
 
 class MyGame(arcade.Window):
@@ -29,7 +28,6 @@ class MyGame(arcade.Window):
         self.reset_score = True
         self.end_of_map = 0
         self.level = 1
-        
 
     def setup(self):
         #Init cameras
@@ -59,7 +57,9 @@ class MyGame(arcade.Window):
         
         self.engine = arcade.PhysicsEnginePlatformer(self.player, 
                                                      gravity_constant=cons.GRAVITY, 
-                                                     walls = self.scene["Platforms"])
+                                                     walls = self.scene[cons.LAYER_NAME_PLATFORMS],
+                                                     ladders=self.scene[cons.LAYER_NAME_LADDERS],
+                                                     platforms=self.scene[cons.LAYER_NAME_MOVING_PLATFORMS])
         
         if self.reset_score:
             self.score = 0
@@ -74,10 +74,18 @@ class MyGame(arcade.Window):
         right = {arcade.key.RIGHT, arcade.key.D}
         
         self.player.change_x = 0
+        if self.engine.is_on_ladder():
+            self.player.change_y = 0
         
-        if self.pressed_keys & up and self.engine.can_jump():
-            self.player.change_y = cons.PLAYER_JUMP_SPEED
-            arcade.play_sound(self.jump_sound)
+        if self.pressed_keys & up and not (self.pressed_keys & down):
+            if self.engine.is_on_ladder():
+                self.player.change_y = cons.PLAYER_MOVEMENT_SPEED
+            elif self.engine.can_jump():
+                self.player.change_y = cons.PLAYER_JUMP_SPEED
+                arcade.play_sound(self.jump_sound)
+        elif self.pressed_keys & down and not (self.pressed_keys & up):
+            if self.engine.is_on_ladder():
+                self.player.change_y = -cons.PLAYER_MOVEMENT_SPEED
             
         if self.pressed_keys & left and not (self.pressed_keys & right):
             self.player.change_x = -cons.PLAYER_MOVEMENT_SPEED
@@ -106,6 +114,7 @@ class MyGame(arcade.Window):
     def on_update(self, delta_time: float):
         self.update_player_movement()
         self.engine.update()
+        self.scene.update([cons.LAYER_NAME_MOVING_PLATFORMS])
         self.center_camera_to_player()
         
         coin_hit_list = arcade.check_for_collision_with_list(self.player, self.scene["Coins"])
@@ -135,7 +144,7 @@ class MyGame(arcade.Window):
             self.reset_score = False
             self.setup()
     
-    def on_draw(self):       
+    def on_draw(self):
         self.clear()
         
         self.camera.use()

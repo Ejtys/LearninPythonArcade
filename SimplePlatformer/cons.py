@@ -24,13 +24,20 @@ COLLECT_COIN_SOUND = ":resources:sounds/coin1.wav"
 JUMP_SOUND = ":resources:sounds/jump3.wav"
 GAME_OVER_SOUND = ":resources:sounds/gameover1.wav"
 
-LEVEL_MAP = ["SimplePlatformer/map/map2_level_1.json", "SimplePlatformer/map/map2_level_2.json"]
+"""LEVEL_MAP = ["SimplePlatformer/map/map2_level_1.json", 
+             "SimplePlatformer/map/map2_level_2.json",
+             "SimplePlatformer/map/map_with_ladders.json"]
+"""
+LEVEL_MAP = ["SimplePlatformer/map/map_with_ladders.json"]
+
 
 LAYER_NAME_PLATFORMS = "Platforms"
 LAYER_NAME_COINS = "Coins"
 LAYER_NAME_FOREGROUND = "Foreground"
 LAYER_NAME_BACKGROUND = "Background"
 LAYER_NAME_DONT_TOUCH = "Don't Touch"
+LAYER_NAME_LADDERS = "Ladders"
+LAYER_NAME_MOVING_PLATFORMS = "Moving Platforms"
 
 LAYER_OPTIONS = {
             LAYER_NAME_PLATFORMS: {
@@ -42,5 +49,10 @@ LAYER_OPTIONS = {
             LAYER_NAME_DONT_TOUCH: {
                 "use_spatial_hash": True,
             },
+            LAYER_NAME_LADDERS: {
+                "use_spatial_hash": True,
+            },
+            LAYER_NAME_MOVING_PLATFORMS: {
+                "use_spatial_hash": False,}
         }
 

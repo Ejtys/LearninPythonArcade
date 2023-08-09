@@ -19,6 +19,31 @@
         }, 
         {
          "compression":"zlib",
+         "data":"eJztwTEBAAAAwqD1T20JT6AAAHgaCWAAAQ==",
+         "encoding":"base64",
+         "height":15,
+         "id":6,
+         "name":"Ladders",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":40,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":7,
+         "name":"Moving Platforms",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "compression":"zlib",
          "data":"eJxjYBgFo2AUjIJRMApGwSggH\/BSWd1wAAAjYAAb",
          "encoding":"base64",
          "height":15,
@@ -73,11 +98,11 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":6,
+ "nextlayerid":8,
  "nextobjectid":1,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.4.3",
+ "tiledversion":"1.10.2",
  "tileheight":128,
  "tilesets":[
         {
@@ -334,7 +359,8 @@
                  "image":"..\/images\/tiles\/dirtHalf.png",
                  "imageheight":128,
                  "imagewidth":128
-                }, 
+                },
+            
                 {
                  "id":40,
                  "image":"..\/images\/tiles\/dirtHalf_left.png",
@@ -574,7 +600,8 @@
                  "image":"..\/images\/tiles\/mushroomRed.png",
                  "imageheight":128,
                  "imagewidth":128
-                }, 
+                },
+            
                 {
                  "id":80,
                  "image":"..\/images\/tiles\/planet.png",
@@ -814,7 +841,8 @@
                  "image":"..\/images\/tiles\/signLeft.png",
                  "imageheight":128,
                  "imagewidth":128
-                }, 
+                },
+            
                 {
                  "id":120,
                  "image":"..\/images\/tiles\/signRight.png",
@@ -1183,7 +1211,8 @@
                  "image":"..\/images\/tiles\/switchGreen.png",
                  "imageheight":128,
                  "imagewidth":128
-                }, 
+                },
+            
                 {
                  "id":160,
                  "image":"..\/images\/tiles\/switchGreen_pressed.png",
@@ -1224,6 +1253,6 @@
         }],
  "tilewidth":128,
  "type":"map",
- "version":1.4,
+ "version":"1.10",
  "width":40
 }
